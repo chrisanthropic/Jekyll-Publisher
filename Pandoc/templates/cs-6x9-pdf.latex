@@ -436,7 +436,7 @@ $endif$
           \item \textbf{NonCommercial} -- You may not use the material for commercial purposes. \par
           \item \textbf{Share Alike} -- If you remix, transform, or build upon the material, you must distribute your contributions under the same license as the original. \par
       \end{itemize}
-    \textbf No additional restrictions — You may not apply legal terms or technological measures that legally restrict others from doing anything the license permits.
+    \textbf{No additional restrictions — You may not apply legal terms or technological measures that legally restrict others from doing anything the license permits.}
     
 % Add a vertical space
     \vspace{.5cm}
@@ -458,7 +458,7 @@ $endif$
       
 % If ISBNs are defined in Yaml front matter then write them here
       $if(paperback-isbn)$Paperback ISBN: {$paperback-isbn$} \par $endif$
-      $if(hardcover-isbn)$HardcoverISBN: {$hardcover-isbn$}\par $endif$
+      $if(hardcover-isbn)$Hardcover ISBN: {$hardcover-isbn$}\par $endif$
       $if(epub-isbn)$ePub ISBN: {$epub-isbn$} \par $endif$
       
 % Stop centering
