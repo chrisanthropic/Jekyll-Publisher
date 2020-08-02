@@ -13,11 +13,14 @@
   \geometry{
   paperheight=203.2mm, %actual height measurement of the page
   paperwidth=127mm, %actual width measurement of the page
-  total={90.54mm, 127mm}, % widht/height of the "text box"/text area on the page
-  top=19.177mm, % top margin
-  bottom=19.177mm, %bottom margin
-  inner=22.352mm, %inner/gutter margin
-  outer=17.907mm, %outer margin
+  includehead, %include header inside of text area calculation (footer and margin notes aren't used in this template)
+  top=$if(top-margin)$$top-margin$$else$19.177mm$endif$, % top margin
+  bottom=$if(bottom-margin)$$bottom-margin$$else$19.177mm$endif$, %bottom margin
+  inner=$if(inner-margin)$$inner-margin$$else$22.352mm$endif$, %inner/gutter margin
+  outer=$if(outer-margin)$$outer-margin$$else$17.907mm$endif$, %outer margin
+  $if(debug)$
+    showframe %show lines drawn around text, footer, header, and margin note areas
+  $endif$
   }
 
 %% Set lineheight / distance between lines
@@ -149,8 +152,12 @@ $endif$
 {150pt}%top margin
 {25pt}%bottom margin
 
-% This tells it to style the titleformat for chapters
-\titleformat{\chapter}[display]{\bfseries\titlefont}{\Large Chapter \thechapter \normalfont}{0.5mm}{\small}
+% This tells it to style the title format for chapters (or use a style from fncychap, if requested)
+$if(fancy-chapter)$
+  \usepackage[$fancy-chapter$]{fncychap}
+$else$
+  \titleformat{\chapter}[display]{\bfseries\titlefont}{\Large Chapter \thechapter \normalfont}{0.5mm}{\small}
+$endif$
 
 %%%%%%%%%%%%%%%%%%
 %% This part says to style the titles for "chapters"
@@ -205,13 +212,10 @@ $endif$
 %% Used to set some things to all caps
 \usepackage{textcase}
 
+\usepackage{libertinus}
+
 %% Set Main Fonts
-\setmainfont[
-  Ligatures=TeX,
-  ItalicFont={Linux Libertine O:style=Italic},
-  BoldFont={Linux Libertine O:style=Bold},
-  BoldItalicFont={Linux Libertine O:style=Bold Italic},
-]{Linux Libertine O}
+\setmainfont{Libertinus Serif}
 
 %\setmainfont[
 %  Ligatures=TeX,
@@ -225,6 +229,12 @@ $endif$
 %% Make our quotes curly
 \defaultfontfeatures{Mapping=tex-text}
 
+%% Provides calligraphy font
+\usepackage{calligra}
+
+%% Provides symbols for flourishes (scene dividers)
+\usepackage{adforn}
+
 %% Provides Creative Commons Icons
 \usepackage{ccicons}
 
@@ -237,9 +247,8 @@ $endif$
 %\newcommand*{\goth}{\fontspec{URW Gothic L}\selectfont}
 
 % These commands use free TeX fonts from CTAN that are nearly identical
-\usepackage{tgadventor}
 \usepackage[T1]{fontenc}
-\newfontfamily\sansfont{TeX Gyre Adventor}
+\newfontfamily\sansfont{Libertinus Sans}
 
 
 %% Set Minion Pro macro \minion
@@ -252,14 +261,19 @@ $endif$
 %\usepackage[T1]{fontenc}
 %\newfontfamily\minion{Gentium Book Basic}
 
-\usepackage{libertine}
-\usepackage[T1]{fontenc}
-\newfontfamily\primaryfont[Ligatures=TeX, Numbers=OldStyle]{Linux Libertine O}
-\newfontfamily\titlefont[Scale=1.75, Ligatures=TeX]{Linux Libertine O}
+\newfontfamily\primaryfont{Libertinus Serif}
+\newfontfamily\titlefont{Libertinus Serif}
 
 %\setmainfont
 %\renewcommand{\sfdefault}{URW Gothic}
 %\setmonofont
+
+%% Provides support for drop caps
+\usepackage{lettrine}
+%% If you want the first letter to be a calligraphy font
+%\renewcommand{\LettrineFontHook}{\calligra}
+%% Or a block letter
+%\renewcommand{\LettrineFontHook}{\Eileenfamily}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -321,13 +335,19 @@ $endif$
   \vspace*{3cm}
   
 % Write the Book Title
+$if(title-latex)$
+  \makeatletter \Huge \bfseries \titlefont \textbf{\textsc{$title-latex$}} \par \makeatother    
+$else$
   \makeatletter \Huge \bfseries \titlefont \textbf{\textsc{\@title}} \par \makeatother    
+$endif$
 
 % Add a vertical space
   \vspace{1cm}
     
 % Write the subtitle
-$if(subtitle)$
+$if(subtitle-latex)$
+  \Large \primaryfont $subtitle-latex$ \par
+$elseif(subtitle)$
   \Large \primaryfont $subtitle$ \par
 $endif$
     
@@ -337,7 +357,7 @@ $endif$
 % Write the author name
   \Large \normalfont \sansfont  \makeatletter \MakeUppercase\@author \makeatother \par
 
-% Stop centering everythign
+% Stop centering everything
   \end{center}
 
 % End the page
@@ -357,7 +377,7 @@ $endif$
 % Use Sans font
   \sansfont
   
-% Write the Book Titlecopyright page
+% Write the Book copyright page
   \makeatletter  \small \@title \par \makeatother
     
 % Write the CC logo, year, and author
@@ -388,7 +408,7 @@ $endif$
 % Write the Creative Commons Icons
     \ccbyncsa
     
-% Stop centering everythign
+% Stop centering everything
   \end{center}
        
 % Write license text
@@ -411,7 +431,7 @@ $endif$
           \item \textbf{NonCommercial} -- You may not use the material for commercial purposes. \par
           \item \textbf{Share Alike} -- If you remix, transform, or build upon the material, you must distribute your contributions under the same license as the original. \par
       \end{itemize}
-    \textbf No additional restrictions — You may not apply legal terms or technological measures that legally restrict others from doing anything the license permits.
+    \textbf{No additional restrictions — You may not apply legal terms or technological measures that legally restrict others from doing anything the license permits.}
     
 % Add a vertical space
     \vspace{.3cm}
@@ -433,7 +453,7 @@ $endif$
       
 % If ISBNs are defined in Yaml front matter then write them here
       $if(paperback-isbn)$Paperback ISBN: {$paperback-isbn$} \par $endif$
-      $if(hardcover-isbn)$HardcoverISBN: {$hardcover-isbn$}\par $endif$
+      $if(hardcover-isbn)$Hardcover ISBN: {$hardcover-isbn$}\par $endif$
       $if(epub-isbn)$ePub ISBN: {$epub-isbn$} \par $endif$
       
 % Stop centering
@@ -447,25 +467,54 @@ $endif$
 %% Create a dedication page
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
-% No headers/footers
-\pagestyle{empty}
+$if(dedication)$
+    % No headers/footers
+    \pagestyle{empty}
 
-% Center everything
-  \begin{center}
+    % Center everything
+      \begin{center}
 
-% Vertically center
-\topskip0pt
-\vspace*{\fill}
+    % Vertically center
+    \topskip0pt
+    \vspace*{\fill}
   
-% Write the Book Title
-  \normalfont\normalsize $dedication$ \par
+    % Write the Dedication
+      \normalfont\normalsize $dedication$ \par
 
-% Stop centering
-\vspace*{\fill}
-    \end{center}
+    % Stop centering
+    \vspace*{\fill}
+        \end{center}
     
-% End the page
-\clearpage
+    % End the page
+    \clearpage
+$endif$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Create a table of contents
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+$if(toc)$
+    $if(toc-title)$
+    \renewcommand*\contentsname{$toc-title$}
+    $endif$
+    $if(beamer)$
+    \begin{frame}[allowframebreaks]
+    $if(toc-title)$
+      \frametitle{$toc-title$}
+    $endif$
+      \tableofcontents[hideallsubsections]
+    \end{frame}
+    $else$
+    {
+    $if(colorlinks)$
+    \hypersetup{linkcolor=$if(toccolor)$$toccolor$$else$$endif$}
+    $endif$
+    \setcounter{tocdepth}{$toc-depth$}
+    \tableofcontents
+    }
+    $endif$
+$endif$
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%

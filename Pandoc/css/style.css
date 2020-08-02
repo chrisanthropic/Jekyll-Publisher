@@ -40,3 +40,18 @@ hr { border: 0; height: 1px; background-image: linear-gradient(to right, rgba(0,
  * this is a dirty hack since we're writing fiction and probably not using tables
  * but I'm using Pandoc's table markdown syntax to center certain text, like songs */
 table {margin-left: auto; margin-right: auto; margin-top: 10px;}
+
+/* Class for small capping text in a paragraph, such as a lead line */
+.drop-caps
+  {
+  float: left;
+  width: 0.7em;
+  font-size: 200%;
+  line-height: 80%;
+  }
+
+/* Class for small capping text in a paragraph, such as a lead line */
+.small-caps
+  {
+  font-variant: small-caps;
+  }

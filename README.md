@@ -10,12 +10,12 @@ My wife is [an author](https://www.backthatelfup.com) and I handle all of the di
 
 It can be a pain to manually update a Bio page with new information or new books for example. Doing a simple thing like that for 3 formats of a dozen books can take time and introduces the possibility of new typos with every change.
 
-Pandoc is a great tool to convert markdown files to html/epub/pdf etc. but it's epub templating is still very minimalistic. It requires multiple stages to create a template that allows me to reuse common pages such as biography, licensing, etc.
+Pandoc is a great tool to convert markdown files to html/epub/pdf/etc., but its epub templating is still very minimalistic. It requires multiple stages to create a template that allows me to reuse common pages such as biography, licensing, etc.
 
-I love Jekyll and use it whenever I can for web design. One of my favorite aspects is the ability to define 'code chunks' in the _includes folder and then use reference it wherever I want. Change that include file, rebuild, and every reference to it on your website is updated. It's that kind of logic that I need for creating my books.
+I love Jekyll and use it whenever I can for web design. One of my favorite aspects is the ability to define 'code chunks' in the _includes folder and then use references to it wherever I want. Change that include file, rebuild, and every reference to it on your website is updated. It's that kind of logic that I need for creating my books.
 
 By using Jekyll's templating I'm able to create files that slightly differ based on need. The mandatory Smashwords title page for example, or a custom Title page with Amazon URLs to other books.
 
-Jekyll allows me to create custom templates, multiple 'includes', and then outputs them in a perfectly formatted Markdown file.
+Jekyll allows me to create custom templates, multiple 'includes', and then output them into a perfectly formatted Markdown file.
 
 This markdown file can then be passed along to Pandoc and converted to epub/mobi/pdf.

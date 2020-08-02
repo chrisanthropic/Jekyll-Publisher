@@ -80,6 +80,13 @@ epub-isbn:
 
 dedication: Dedicated to my readers.
 
+toc: false
+
+top-margin:
+bottom-margin:
+inner-margin:
+outer-margin:
+
 identifier:
     - scheme: UUID
       text: [Grab a free Version4 UUID from here: https://www.uuidgenerator.net/version4]
