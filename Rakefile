@@ -198,11 +198,11 @@ desc "Create epub versions of our book(s)."
     files = fullfiles.gsub!(/\b-epub\b/, "")
     files.each do |file|
       FileUtils.mkdir_p "Books/#{file}"
-      system "pandoc --toc-depth=1 --template=Pandoc/templates/custom-epub.html --epub-stylesheet=Pandoc/css/style.css --smart -o Books/#{file}/#{file}.epub _site/*/#{file}-epub.md"
+      system "pandoc --top-level-division=chapter --toc-depth=1 --template=Pandoc/templates/custom-epub.html --css=Pandoc/css/style.css -f markdown+smart -o Books/#{file}/#{file}.epub _site/*/#{file}-epub.md"
     end            
   else 
       FileUtils.mkdir_p "Books/#{args.book}"
-      system "pandoc --toc-depth=1 --template=Pandoc/templates/custom-epub.html --epub-stylesheet=Pandoc/css/style.css --smart -o Books/#{args.book}/#{args.book}.epub _site/*/#{args.book}-epub.md"
+      system "pandoc --top-level-divison=chapter --toc-depth=1 --template=Pandoc/templates/custom-epub.html --css=Pandoc/css/style.css -f markdown+smart -o Books/#{args.book}/#{args.book}.epub _site/*/#{args.book}-epub.md"
   end
 end
 
@@ -219,11 +219,11 @@ desc "Create Smashwords epub versions of our book(s)."
     files = fullfiles.gsub!(/\b-Smashwords\b/, "")
     files.each do |file|
       FileUtils.mkdir_p "Books/#{file}"
-      system "pandoc --toc-depth=1 --template=Pandoc/templates/smashwords-epub.html --epub-stylesheet=Pandoc/css/style.css --smart -o Books/#{file}/#{file}-Smashwords.epub _site/*/#{file}-epub.md"
+      system "pandoc --top-level-divison=chapter --toc-depth=1 --template=Pandoc/templates/smashwords-epub.html --css=Pandoc/css/style.css -f markdown+smart -o Books/#{file}/#{file}-Smashwords.epub _site/*/#{file}-epub.md"
     end            
   else 
       FileUtils.mkdir_p "Books/#{args.book}"
-      system "pandoc --toc-depth=1 --template=Pandoc/templates/custom-epub.html --epub-stylesheet=Pandoc/css/style.css --smart -o Books/#{args.book}/#{args.book}-Smashwords.epub _site/*/#{args.book}-Smashwords.md"
+      system "pandoc --top-level-divison=chapter --toc-depth=1 --template=Pandoc/templates/custom-epub.html --css=Pandoc/css/style.css -f markdown+smart -o Books/#{args.book}/#{args.book}-Smashwords.epub _site/*/#{args.book}-Smashwords.md"
   end
 end
 
@@ -240,14 +240,14 @@ desc "Create Amazon mobi versions of our book(s)."
     files = fullfiles.gsub!(/\b-Amazon\b/, "")
     files.each do |file|
       FileUtils.mkdir_p "Books/#{file}"
-      system "pandoc --toc-depth=1 --template=Pandoc/templates/amazon-epub.html --epub-stylesheet=Pandoc/css/style.css --smart -o Books/#{file}/#{file}-Amazon.epub _site/*/#{file}-Amazon.md"
+      system "pandoc --top-level-divison=chapter --toc-depth=1 --template=Pandoc/templates/amazon-epub.html --css=Pandoc/css/style.css -f markdown+smart -o Books/#{file}/#{file}-Amazon.epub _site/*/#{file}-Amazon.md"
       
     system "kindlegen -c2 Books/#{file}/#{file}-Amazon.epub"
     FileUtils.rm_r "Books/#{file}/#{file}-Amazon.epub"
     end            
   else 
     FileUtils.mkdir_p "Books/#{args.book}"
-    system "pandoc --toc-depth=1 --template=Pandoc/templates/amazon-epub.html --epub-stylesheet=Pandoc/css/style.css --smart -o Books/#{args.book}/#{args.book}-Amazon.epub _site/*/#{args.book}-Amazon.md"
+    system "pandoc --top-level-divison=chapter --toc-depth=1 --template=Pandoc/templates/amazon-epub.html --css=Pandoc/css/style.css -f markdown+smart -o Books/#{args.book}/#{args.book}-Amazon.epub _site/*/#{args.book}-Amazon.md"
     system "kindlegen -c2 Books/#{args.book}/#{args.book}-Amazon.epub"
     FileUtils.rm_r "Books/#{args.book}/#{args.book}-Amazon.epub"
   end
@@ -260,7 +260,7 @@ desc "Create Smashwords epub versions of our book(s)."
 Rake::Task[:jekyll].invoke
 Rake::Task[:rename].invoke
 
-system "pandoc --latex-engine=xelatex -o Books/bio.tex Source/_includes/bio.md"
+system "pandoc --pdf-engine=xelatex -o Books/bio.tex Source/_includes/bio.md"
 
   if "#{args.book}" == "all"
     filelist = Rake::FileList["_site/*/*-pdf*"]
@@ -268,11 +268,11 @@ system "pandoc --latex-engine=xelatex -o Books/bio.tex Source/_includes/bio.md"
     files = fullfiles.gsub!(/\b-pdf\b/, "")
     files.each do |file|
       FileUtils.mkdir_p "Books/#{file}"
-      system "pandoc --template=Pandoc/templates/cs-5x8-pdf.latex --latex-engine=xelatex --latex-engine-opt=-output-driver='xdvipdfmx -V 3 -z 0' -f markdown+backtick_code_blocks -o Books/#{file}/#{file}-5x8-print.pdf -A Books/bio.tex _site/*/#{file}-pdf.md"
+      system "pandoc --top-level-divison=chapter --template=Pandoc/templates/cs-5x8-pdf.latex --pdf-engine=xelatex --pdf-engine-opt=-output-driver='xdvipdfmx -V 3 -z 0' -f markdown+backtick_code_blocks -o Books/#{file}/#{file}-5x8-print.pdf -A Books/bio.tex _site/*/#{file}-pdf.md"
     end            
   else 
       FileUtils.mkdir_p "Books/#{args.book}"
-      system "pandoc --template=Pandoc/templates/cs-5x8-pdf.latex --latex-engine=xelatex --latex-engine-opt=-output-driver='xdvipdfmx -V 3 -z 0' -f markdown+backtick_code_blocks -o Books/#{args.book}/#{args.book}-5x8-print.pdf -A Books/bio.tex _site/*/#{args.book}-pdf.md"
+      system "pandoc --top-level-divison=chapter --template=Pandoc/templates/cs-5x8-pdf.latex --pdf-engine=xelatex --pdf-engine-opt=-output-driver='xdvipdfmx -V 3 -z 0' -f markdown+backtick_code_blocks -o Books/#{args.book}/#{args.book}-5x8-print.pdf -A Books/bio.tex _site/*/#{args.book}-pdf.md"
   end
 end
 
@@ -283,7 +283,7 @@ desc "Create Smashwords epub versions of our book(s)."
 Rake::Task[:jekyll].invoke
 Rake::Task[:rename].invoke
 
-system "pandoc --latex-engine=xelatex -o Books/bio.tex Source/_includes/bio.md"
+system "pandoc --pdf-engine=xelatex -o Books/bio.tex Source/_includes/bio.md"
 
   if "#{args.book}" == "all"
     filelist = Rake::FileList["_site/*/*-pdf*"]
@@ -291,11 +291,11 @@ system "pandoc --latex-engine=xelatex -o Books/bio.tex Source/_includes/bio.md"
     files = fullfiles.gsub!(/\b-pdf\b/, "")
     files.each do |file|
       FileUtils.mkdir_p "Books/#{file}"
-      system "pandoc --template=Pandoc/templates/cs-6x9-pdf.latex --latex-engine=xelatex --latex-engine-opt=-output-driver='xdvipdfmx -V 3 -z 0' -f markdown+backtick_code_blocks -o Books/#{file}/#{file}-6x9-print.pdf -A Books/bio.tex _site/*/#{file}-pdf.md"
+      system "pandoc --top-level-divison=chapter --template=Pandoc/templates/cs-6x9-pdf.latex --pdf-engine=xelatex --pdf-engine-opt=-output-driver='xdvipdfmx -V 3 -z 0' -f markdown+backtick_code_blocks -o Books/#{file}/#{file}-6x9-print.pdf -A Books/bio.tex _site/*/#{file}-pdf.md"
     end            
   else 
       FileUtils.mkdir_p "Books/#{args.book}"
-      system "pandoc --template=Pandoc/templates/cs-6x9-pdf.latex --latex-engine=xelatex --latex-engine-opt=-output-driver='xdvipdfmx -V 3 -z 0' -f markdown+backtick_code_blocks -o Books/#{args.book}/#{args.book}-6x9-print.pdf -A Books/bio.tex _site/*/#{args.book}-pdf.md"
+      system "pandoc --top-level-divison=chapter --template=Pandoc/templates/cs-6x9-pdf.latex --pdf-engine=xelatex --pdf-engine-opt=-output-driver='xdvipdfmx -V 3 -z 0' -f markdown+backtick_code_blocks -o Books/#{args.book}/#{args.book}-6x9-print.pdf -A Books/bio.tex _site/*/#{args.book}-pdf.md"
   end
 end
 
@@ -306,7 +306,7 @@ desc "Create Smashwords epub versions of our book(s)."
 Rake::Task[:jekyll].invoke
 Rake::Task[:rename].invoke
 
-system "pandoc --latex-engine=xelatex -o Books/bio.tex Source/_includes/bio.md"
+system "pandoc --pdf-engine=xelatex -o Books/bio.tex Source/_includes/bio.md"
 
   if "#{args.book}" == "all"
     filelist = Rake::FileList["_site/*/*-pdf*"]
@@ -314,11 +314,11 @@ system "pandoc --latex-engine=xelatex -o Books/bio.tex Source/_includes/bio.md"
     files = fullfiles.gsub!(/\b-pdf\b/, "")
     files.each do |file|
       FileUtils.mkdir_p "Books/#{file}"
-      system "pandoc --template=Pandoc/templates/pdf.latex --latex-engine=xelatex -f markdown+backtick_code_blocks -o Books/#{file}/#{file}-ebook.pdf -A Books/bio.tex _site/*/#{file}-pdf.md"
+      system "pandoc --top-level-divison=chapter --template=Pandoc/templates/pdf.latex --pdf-engine=xelatex -f markdown+backtick_code_blocks -o Books/#{file}/#{file}-ebook.pdf -A Books/bio.tex _site/*/#{file}-pdf.md"
     end            
   else 
       FileUtils.mkdir_p "Books/#{args.book}"
-      system "pandoc --template=Pandoc/templates/pdf.latex --latex-engine=xelatex -f markdown+backtick_code_blocks -o Books/#{args.book}/#{args.book}-ebook.pdf -A Books/bio.tex _site/*/#{args.book}-pdf.md"
+      system "pandoc --top-level-divison=chapter --template=Pandoc/templates/pdf.latex --pdf-engine=xelatex -f markdown+backtick_code_blocks -o Books/#{args.book}/#{args.book}-ebook.pdf -A Books/bio.tex _site/*/#{args.book}-pdf.md"
   end
 end
 
