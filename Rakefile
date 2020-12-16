@@ -185,6 +185,12 @@ desc "Rename all .html files in _site to .md instead."
   end
 end
 
+#### BIO
+task :bio do
+desc "Build biography latex temporary file and place it into Books folder"
+  system "pandoc --latex-engine=xelatex -o Books/bio.tex Source/_includes/bio.md"
+end
+
 #### EPUB
 task :epub, [:book] do |task, args|
 
@@ -259,8 +265,7 @@ desc "Create Smashwords epub versions of our book(s)."
 
 Rake::Task[:jekyll].invoke
 Rake::Task[:rename].invoke
-
-system "pandoc --latex-engine=xelatex -o Books/bio.tex Source/_includes/bio.md"
+Rake::Task[:bio].invoke
 
   if "#{args.book}" == "all"
     filelist = Rake::FileList["_site/*/*-pdf*"]
@@ -283,7 +288,6 @@ desc "Create Smashwords epub versions of our book(s)."
 Rake::Task[:jekyll].invoke
 Rake::Task[:rename].invoke
 
-system "pandoc --latex-engine=xelatex -o Books/bio.tex Source/_includes/bio.md"
 
   if "#{args.book}" == "all"
     filelist = Rake::FileList["_site/*/*-pdf*"]
@@ -305,8 +309,7 @@ desc "Create Smashwords epub versions of our book(s)."
 
 Rake::Task[:jekyll].invoke
 Rake::Task[:rename].invoke
-
-system "pandoc --latex-engine=xelatex -o Books/bio.tex Source/_includes/bio.md"
+Rake::Task[:bio].invoke
 
   if "#{args.book}" == "all"
     filelist = Rake::FileList["_site/*/*-pdf*"]
