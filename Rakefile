@@ -175,6 +175,7 @@ end
 task :jekyll do
 desc "Jekyll is muxing our markdown."
   system "bundle exec jekyll build"
+  Rake::Task[:rename].invoke
 end
 
 #### RENAME
@@ -195,7 +196,6 @@ end
 task :epub, [:book] do |task, args|
 
 Rake::Task[:jekyll].invoke
-Rake::Task[:rename].invoke
     
 desc "Create epub versions of our book(s)."
   if "#{args.book}" == "all"
@@ -216,7 +216,6 @@ end
 task :smashwords, [:book] do |task, args|
     
 Rake::Task[:jekyll].invoke
-Rake::Task[:rename].invoke
     
 desc "Create Smashwords epub versions of our book(s)."
   if "#{args.book}" == "all"
@@ -237,7 +236,6 @@ end
 task :amazon, [:book] do |task, args|
     
 Rake::Task[:jekyll].invoke
-Rake::Task[:rename].invoke
     
 desc "Create Amazon mobi versions of our book(s)."
   if "#{args.book}" == "all"
@@ -264,7 +262,6 @@ task :print, [:book] do |task, args|
 desc "Create Smashwords epub versions of our book(s)."
 
 Rake::Task[:jekyll].invoke
-Rake::Task[:rename].invoke
 Rake::Task[:bio].invoke
 
   if "#{args.book}" == "all"
@@ -286,7 +283,6 @@ task :print, [:book] do |task, args|
 desc "Create Smashwords epub versions of our book(s)."
 
 Rake::Task[:jekyll].invoke
-Rake::Task[:rename].invoke
 
 
   if "#{args.book}" == "all"
@@ -308,7 +304,6 @@ task :pdf, [:book] do |task, args|
 desc "Create Smashwords epub versions of our book(s)."
 
 Rake::Task[:jekyll].invoke
-Rake::Task[:rename].invoke
 Rake::Task[:bio].invoke
 
   if "#{args.book}" == "all"
@@ -331,7 +326,6 @@ desc "Create all versions of our book(s)."
 
   if "#{args.book}" == "all"
     Rake::Task[:jekyll].invoke
-    Rake::Task[:rename].invoke
     Rake::Task[:epub].invoke("all")
     Rake::Task[:smashwords].invoke("all")
     Rake::Task[:amazon].invoke("all")
@@ -339,7 +333,6 @@ desc "Create all versions of our book(s)."
     Rake::Task[:pdf].invoke("all")
   else
     Rake::Task[:jekyll].invoke
-    Rake::Task[:rename].invoke
     Rake::Task[:epub].invoke("#{args.book}")
     Rake::Task[:smashwords].invoke("#{args.book}")
     Rake::Task[:amazon].invoke("#{args.book}")
