@@ -192,7 +192,7 @@ Rake::Task[:jekyll].invoke
 Rake::Task[:rename].invoke
     
 desc "Create epub versions of our book(s)."
-  if "#{args.book}" == "all"
+  if "#{args.book}" == "all" or args.book.nil?
     filelist = Rake::FileList["_site/*/*-epub*"]
     fullfiles = filelist.pathmap("%n")
     files = fullfiles.gsub!(/\b-epub\b/, "")
@@ -213,7 +213,7 @@ Rake::Task[:jekyll].invoke
 Rake::Task[:rename].invoke
     
 desc "Create Smashwords epub versions of our book(s)."
-  if "#{args.book}" == "all"
+  if "#{args.book}" == "all" or args.book.nil?
     filelist = Rake::FileList["_site/*/*-Smashwords*"]
     fullfiles = filelist.pathmap("%n")
     files = fullfiles.gsub!(/\b-Smashwords\b/, "")
@@ -234,7 +234,7 @@ Rake::Task[:jekyll].invoke
 Rake::Task[:rename].invoke
     
 desc "Create Amazon mobi versions of our book(s)."
-  if "#{args.book}" == "all"
+  if "#{args.book}" == "all" or args.book.nil?
     filelist = Rake::FileList["_site/*/*-Amazon*"]
     fullfiles = filelist.pathmap("%n")
     files = fullfiles.gsub!(/\b-Amazon\b/, "")
@@ -262,7 +262,7 @@ Rake::Task[:rename].invoke
 
 system "pandoc --latex-engine=xelatex -o Books/bio.tex Source/_includes/bio.md"
 
-  if "#{args.book}" == "all"
+  if "#{args.book}" == "all" or args.book.nil?
     filelist = Rake::FileList["_site/*/*-pdf*"]
     fullfiles = filelist.pathmap("%n")
     files = fullfiles.gsub!(/\b-pdf\b/, "")
@@ -285,7 +285,7 @@ Rake::Task[:rename].invoke
 
 system "pandoc --latex-engine=xelatex -o Books/bio.tex Source/_includes/bio.md"
 
-  if "#{args.book}" == "all"
+  if "#{args.book}" == "all" or args.book.nil?
     filelist = Rake::FileList["_site/*/*-pdf*"]
     fullfiles = filelist.pathmap("%n")
     files = fullfiles.gsub!(/\b-pdf\b/, "")
@@ -308,7 +308,7 @@ Rake::Task[:rename].invoke
 
 system "pandoc --latex-engine=xelatex -o Books/bio.tex Source/_includes/bio.md"
 
-  if "#{args.book}" == "all"
+  if "#{args.book}" == "all" or args.book.nil?
     filelist = Rake::FileList["_site/*/*-pdf*"]
     fullfiles = filelist.pathmap("%n")
     files = fullfiles.gsub!(/\b-pdf\b/, "")
@@ -326,7 +326,7 @@ end
 task :all, [:book] do |task, args|
 desc "Create all versions of our book(s)."
 
-  if "#{args.book}" == "all"
+  if "#{args.book}" == "all" or args.book.nil?
     Rake::Task[:jekyll].invoke
     Rake::Task[:rename].invoke
     Rake::Task[:epub].invoke("all")
