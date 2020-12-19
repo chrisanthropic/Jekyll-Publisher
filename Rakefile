@@ -11,14 +11,14 @@ end
 
 ################
 #    Create    #
-################ 
+################
 task :create do
-desc "Building our scaffolding; putting expected files in their place."    
+desc "Building our scaffolding; putting expected files in their place."
   def prompt(*args)
     print(*args)
     STDIN.gets.chomp
   end
-    
+
   title = prompt "What is the title of your book? "
   FileUtils.mkdir_p "Source/#{title}/"
 
@@ -28,21 +28,21 @@ desc "Building our scaffolding; putting expected files in their place."
       create.puts "layout: #{title}/amazon"
       create.puts "---"
     end
-    
+
   filename = "Source/#{title}/#{title}-epub.md"
     open(filename, 'w') do |create|
       create.puts "---"
       create.puts "layout: #{title}/epub"
       create.puts "---"
     end
-    
+
   filename = "Source/#{title}/#{title}-pdf.md"
     open(filename, 'w') do |create|
       create.puts "---"
       create.puts "layout: #{title}/pdf"
       create.puts "---"
     end
-    
+
   filename = "Source/#{title}/#{title}-Smashwords.md"
     open(filename, 'w') do |create|
       create.puts "---"
@@ -52,7 +52,7 @@ desc "Building our scaffolding; putting expected files in their place."
 
 
   FileUtils.mkdir_p "Source/_layouts/#{title}/"
-  
+
   filename = "Source/_layouts/#{title}/amazon.md"
     open(filename, 'w') do |create|
       create.puts "{% include #{title}/amazon.md %}"
@@ -61,7 +61,7 @@ desc "Building our scaffolding; putting expected files in their place."
       create.puts "{% include bibliography.md %}"
       create.puts "{% include license.md %}"
     end
-    
+
   filename = "Source/_layouts/#{title}/epub.md"
     open(filename, 'w') do |create|
       create.puts "{% include #{title}/chapters.md %}"
@@ -75,7 +75,7 @@ desc "Building our scaffolding; putting expected files in their place."
     open(filename, 'w') do |create|
       create.puts "{% include #{title}/chapters.md %}"
     end
-    
+
 
   FileUtils.mkdir_p "Source/_includes/#{title}/"
 
@@ -94,7 +94,7 @@ desc "Building our scaffolding; putting expected files in their place."
       create.puts ""
       create.puts "cover-image: Source/images/XXXXX.jpg"
       create.puts ""
-      create.puts "publisher:" 
+      create.puts "publisher:"
       create.puts "rights: This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 Unported License."
       create.puts ""
       create.puts "paperback-isbn:"
@@ -106,13 +106,13 @@ desc "Building our scaffolding; putting expected files in their place."
       create.puts "identifier:"
       create.puts "    - scheme: UUID"
       create.puts "      text: [Grab a free Version4 UUID from here: https://www.uuidgenerator.net/version4]"
-      create.puts ""      
+      create.puts ""
       create.puts "contributors:"
       create.puts "    - designer:"
-      create.puts "      artist:" 
-      create.puts "      editor:" 
+      create.puts "      artist:"
+      create.puts "      editor:"
       create.puts ""
-      create.puts "book1:" 
+      create.puts "book1:"
       create.puts "    - title: Any book you've written"
       create.puts "      link: http://www.amazon.com/dp/XXXXXXXX"
       create.puts "book2:"
@@ -121,45 +121,45 @@ desc "Building our scaffolding; putting expected files in their place."
       create.puts "book3:"
       create.puts "    - title: You can add up to 5 books"
       create.puts "      link:"
-      create.puts ""    
+      create.puts ""
       create.puts "review:"
       create.puts "    - amazon: https://www.amazon.com/review/create-review?asin=XXXXXXX"
-      create.puts ""    
+      create.puts ""
       create.puts "---"
       create.puts "# Chapter Title"
       create.puts "Paste your manuscript here."
     end
-    
+
   filename = "Source/_includes/#{title}/amazon.md"
     open(filename, 'w') do |create|
       create.puts "{% include #{title}/chapters.md %}"
       create.puts "{% include #{title}/amazon_review.md %}"
     end
-    
+
   filename = "Source/_includes/#{title}/amazon_review.md"
     open(filename, 'w') do |create|
       create.puts "\\"
       create.puts "\\"
       create.puts "##### If you enjoyed this book please consider leaving a [review](https://www.amazon.com/review/create-review?asin=XXXXXXXXXX) on Amazon."
     end
-  
-  puts ""  
+
+  puts ""
   puts "Paste your manuscript into Source/_includes/#{title}/chapters.md"
-  puts ""  
+  puts ""
 end
 
 ##################
 #     Destroy    #
-################## 
+##################
 task :destroy do
 desc "Removing scaffoling of specified book."
   def prompt(*args)
     print(*args)
     STDIN.gets.chomp
   end
-    
+
   title = prompt "What is the title of your book? "
-  
+
   FileUtils.rm_r "Source/#{title}"
   FileUtils.rm_r "Source/_layouts/#{title}"
   FileUtils.rm_r "Source/_includes/#{title}"
@@ -190,7 +190,7 @@ task :epub, [:book] do |task, args|
 
 Rake::Task[:jekyll].invoke
 Rake::Task[:rename].invoke
-    
+
 desc "Create epub versions of our book(s)."
   if "#{args.book}" == "all"
     filelist = Rake::FileList["_site/*/*-epub*"]
@@ -198,20 +198,20 @@ desc "Create epub versions of our book(s)."
     files = fullfiles.gsub!(/\b-epub\b/, "")
     files.each do |file|
       FileUtils.mkdir_p "Books/#{file}"
-      system "pandoc --toc-depth=1 --template=Pandoc/templates/custom-epub.html --epub-stylesheet=Pandoc/css/style.css --smart -o Books/#{file}/#{file}.epub _site/*/#{file}-epub.md"
-    end            
-  else 
+      system "pandoc --top-level-division=chapter --toc-depth=1 --template=Pandoc/templates/custom-epub.html --css=Pandoc/css/style.css -f markdown+smart -o Books/#{file}/#{file}.epub _site/*/#{file}-epub.md"
+    end
+  else
       FileUtils.mkdir_p "Books/#{args.book}"
-      system "pandoc --toc-depth=1 --template=Pandoc/templates/custom-epub.html --epub-stylesheet=Pandoc/css/style.css --smart -o Books/#{args.book}/#{args.book}.epub _site/*/#{args.book}-epub.md"
+      system "pandoc --top-level-division=chapter --toc-depth=1 --template=Pandoc/templates/custom-epub.html --css=Pandoc/css/style.css -f markdown+smart -o Books/#{args.book}/#{args.book}.epub _site/*/#{args.book}-epub.md"
   end
 end
 
 #### SMASHWORDS
 task :smashwords, [:book] do |task, args|
-    
+
 Rake::Task[:jekyll].invoke
 Rake::Task[:rename].invoke
-    
+
 desc "Create Smashwords epub versions of our book(s)."
   if "#{args.book}" == "all"
     filelist = Rake::FileList["_site/*/*-Smashwords*"]
@@ -219,20 +219,20 @@ desc "Create Smashwords epub versions of our book(s)."
     files = fullfiles.gsub!(/\b-Smashwords\b/, "")
     files.each do |file|
       FileUtils.mkdir_p "Books/#{file}"
-      system "pandoc --toc-depth=1 --template=Pandoc/templates/smashwords-epub.html --epub-stylesheet=Pandoc/css/style.css --smart -o Books/#{file}/#{file}-Smashwords.epub _site/*/#{file}-epub.md"
-    end            
-  else 
+      system "pandoc --top-level-division=chapter --toc-depth=1 --template=Pandoc/templates/smashwords-epub.html --css=Pandoc/css/style.css -f markdown+smart -o Books/#{file}/#{file}-Smashwords.epub _site/*/#{file}-epub.md"
+    end
+  else
       FileUtils.mkdir_p "Books/#{args.book}"
-      system "pandoc --toc-depth=1 --template=Pandoc/templates/custom-epub.html --epub-stylesheet=Pandoc/css/style.css --smart -o Books/#{args.book}/#{args.book}-Smashwords.epub _site/*/#{args.book}-Smashwords.md"
+      system "pandoc --top-level-division=chapter --toc-depth=1 --template=Pandoc/templates/custom-epub.html --css=Pandoc/css/style.css -f markdown+smart -o Books/#{args.book}/#{args.book}-Smashwords.epub _site/*/#{args.book}-Smashwords.md"
   end
 end
 
 #### AMAZON
 task :amazon, [:book] do |task, args|
-    
+
 Rake::Task[:jekyll].invoke
 Rake::Task[:rename].invoke
-    
+
 desc "Create Amazon mobi versions of our book(s)."
   if "#{args.book}" == "all"
     filelist = Rake::FileList["_site/*/*-Amazon*"]
@@ -240,14 +240,14 @@ desc "Create Amazon mobi versions of our book(s)."
     files = fullfiles.gsub!(/\b-Amazon\b/, "")
     files.each do |file|
       FileUtils.mkdir_p "Books/#{file}"
-      system "pandoc --toc-depth=1 --template=Pandoc/templates/amazon-epub.html --epub-stylesheet=Pandoc/css/style.css --smart -o Books/#{file}/#{file}-Amazon.epub _site/*/#{file}-Amazon.md"
-      
+      system "pandoc --top-level-division=chapter --toc-depth=1 --template=Pandoc/templates/amazon-epub.html --css=Pandoc/css/style.css -f markdown+smart -o Books/#{file}/#{file}-Amazon.epub _site/*/#{file}-Amazon.md"
+
     system "kindlegen -c2 Books/#{file}/#{file}-Amazon.epub"
     FileUtils.rm_r "Books/#{file}/#{file}-Amazon.epub"
-    end            
-  else 
+    end
+  else
     FileUtils.mkdir_p "Books/#{args.book}"
-    system "pandoc --toc-depth=1 --template=Pandoc/templates/amazon-epub.html --epub-stylesheet=Pandoc/css/style.css --smart -o Books/#{args.book}/#{args.book}-Amazon.epub _site/*/#{args.book}-Amazon.md"
+    system "pandoc --top-level-division=chapter --toc-depth=1 --template=Pandoc/templates/amazon-epub.html --css=Pandoc/css/style.css -f markdown+smart -o Books/#{args.book}/#{args.book}-Amazon.epub _site/*/#{args.book}-Amazon.md"
     system "kindlegen -c2 Books/#{args.book}/#{args.book}-Amazon.epub"
     FileUtils.rm_r "Books/#{args.book}/#{args.book}-Amazon.epub"
   end
@@ -260,7 +260,7 @@ desc "Create Smashwords epub versions of our book(s)."
 Rake::Task[:jekyll].invoke
 Rake::Task[:rename].invoke
 
-system "pandoc --latex-engine=xelatex -o Books/bio.tex Source/_includes/bio.md"
+system "pandoc --pdf-engine=xelatex -o Books/bio.tex Source/_includes/bio.md"
 
   if "#{args.book}" == "all"
     filelist = Rake::FileList["_site/*/*-pdf*"]
@@ -268,11 +268,11 @@ system "pandoc --latex-engine=xelatex -o Books/bio.tex Source/_includes/bio.md"
     files = fullfiles.gsub!(/\b-pdf\b/, "")
     files.each do |file|
       FileUtils.mkdir_p "Books/#{file}"
-      system "pandoc --template=Pandoc/templates/cs-5x8-pdf.latex --latex-engine=xelatex --latex-engine-opt=-output-driver='xdvipdfmx -V 3 -z 0' -f markdown+backtick_code_blocks -o Books/#{file}/#{file}-5x8-print.pdf -A Books/bio.tex _site/*/#{file}-pdf.md"
-    end            
-  else 
+      system "pandoc --top-level-division=chapter --template=Pandoc/templates/cs-5x8-pdf.latex --pdf-engine=xelatex --pdf-engine-opt=-output-driver='xdvipdfmx -V 3 -z 0' -f markdown+backtick_code_blocks -o Books/#{file}/#{file}-5x8-print.pdf -A Books/bio.tex _site/*/#{file}-pdf.md"
+    end
+  else
       FileUtils.mkdir_p "Books/#{args.book}"
-      system "pandoc --template=Pandoc/templates/cs-5x8-pdf.latex --latex-engine=xelatex --latex-engine-opt=-output-driver='xdvipdfmx -V 3 -z 0' -f markdown+backtick_code_blocks -o Books/#{args.book}/#{args.book}-5x8-print.pdf -A Books/bio.tex _site/*/#{args.book}-pdf.md"
+      system "pandoc --top-level-division=chapter --template=Pandoc/templates/cs-5x8-pdf.latex --pdf-engine=xelatex --pdf-engine-opt=-output-driver='xdvipdfmx -V 3 -z 0' -f markdown+backtick_code_blocks -o Books/#{args.book}/#{args.book}-5x8-print.pdf -A Books/bio.tex _site/*/#{args.book}-pdf.md"
   end
 end
 
@@ -283,7 +283,7 @@ desc "Create Smashwords epub versions of our book(s)."
 Rake::Task[:jekyll].invoke
 Rake::Task[:rename].invoke
 
-system "pandoc --latex-engine=xelatex -o Books/bio.tex Source/_includes/bio.md"
+system "pandoc --pdf-engine=xelatex -o Books/bio.tex Source/_includes/bio.md"
 
   if "#{args.book}" == "all"
     filelist = Rake::FileList["_site/*/*-pdf*"]
@@ -291,11 +291,11 @@ system "pandoc --latex-engine=xelatex -o Books/bio.tex Source/_includes/bio.md"
     files = fullfiles.gsub!(/\b-pdf\b/, "")
     files.each do |file|
       FileUtils.mkdir_p "Books/#{file}"
-      system "pandoc --template=Pandoc/templates/cs-6x9-pdf.latex --latex-engine=xelatex --latex-engine-opt=-output-driver='xdvipdfmx -V 3 -z 0' -f markdown+backtick_code_blocks -o Books/#{file}/#{file}-6x9-print.pdf -A Books/bio.tex _site/*/#{file}-pdf.md"
-    end            
-  else 
+      system "pandoc --top-level-division=chapter --template=Pandoc/templates/cs-6x9-pdf.latex --pdf-engine=xelatex --pdf-engine-opt=-output-driver='xdvipdfmx -V 3 -z 0' -f markdown+backtick_code_blocks -o Books/#{file}/#{file}-6x9-print.pdf -A Books/bio.tex _site/*/#{file}-pdf.md"
+    end
+  else
       FileUtils.mkdir_p "Books/#{args.book}"
-      system "pandoc --template=Pandoc/templates/cs-6x9-pdf.latex --latex-engine=xelatex --latex-engine-opt=-output-driver='xdvipdfmx -V 3 -z 0' -f markdown+backtick_code_blocks -o Books/#{args.book}/#{args.book}-6x9-print.pdf -A Books/bio.tex _site/*/#{args.book}-pdf.md"
+      system "pandoc --top-level-division=chapter --template=Pandoc/templates/cs-6x9-pdf.latex --pdf-engine=xelatex --pdf-engine-opt=-output-driver='xdvipdfmx -V 3 -z 0' -f markdown+backtick_code_blocks -o Books/#{args.book}/#{args.book}-6x9-print.pdf -A Books/bio.tex _site/*/#{args.book}-pdf.md"
   end
 end
 
@@ -306,7 +306,7 @@ desc "Create Smashwords epub versions of our book(s)."
 Rake::Task[:jekyll].invoke
 Rake::Task[:rename].invoke
 
-system "pandoc --latex-engine=xelatex -o Books/bio.tex Source/_includes/bio.md"
+system "pandoc --pdf-engine=xelatex -o Books/bio.tex Source/_includes/bio.md"
 
   if "#{args.book}" == "all"
     filelist = Rake::FileList["_site/*/*-pdf*"]
@@ -314,11 +314,11 @@ system "pandoc --latex-engine=xelatex -o Books/bio.tex Source/_includes/bio.md"
     files = fullfiles.gsub!(/\b-pdf\b/, "")
     files.each do |file|
       FileUtils.mkdir_p "Books/#{file}"
-      system "pandoc --template=Pandoc/templates/pdf.latex --latex-engine=xelatex -f markdown+backtick_code_blocks -o Books/#{file}/#{file}-ebook.pdf -A Books/bio.tex _site/*/#{file}-pdf.md"
-    end            
-  else 
+      system "pandoc --top-level-division=chapter --template=Pandoc/templates/pdf.latex --pdf-engine=xelatex -f markdown+backtick_code_blocks -o Books/#{file}/#{file}-ebook.pdf -A Books/bio.tex _site/*/#{file}-pdf.md"
+    end
+  else
       FileUtils.mkdir_p "Books/#{args.book}"
-      system "pandoc --template=Pandoc/templates/pdf.latex --latex-engine=xelatex -f markdown+backtick_code_blocks -o Books/#{args.book}/#{args.book}-ebook.pdf -A Books/bio.tex _site/*/#{args.book}-pdf.md"
+      system "pandoc --top-level-division=chapter --template=Pandoc/templates/pdf.latex --pdf-engine=xelatex -f markdown+backtick_code_blocks -o Books/#{args.book}/#{args.book}-ebook.pdf -A Books/bio.tex _site/*/#{args.book}-pdf.md"
   end
 end
 
